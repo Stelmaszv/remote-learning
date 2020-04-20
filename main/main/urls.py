@@ -17,8 +17,10 @@ from django.contrib import admin
 from django.urls import include, path
 from authorization import urls
 from mainpage import url
+from ordinance import url
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('authorization.urls')),
+    path('ordinance/', include('ordinance.url')),
     path('', include('mainpage.url'))
 ]

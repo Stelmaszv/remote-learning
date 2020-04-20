@@ -1,0 +1,7 @@
+{% if user.is_authenticated %}
+    <div>{{ user.username }} </div>
+        {% if user.type.name == 'educator' %}
+            Klasa
+            <a href="">Dodaj Ucznia</a>
+        {% endif %}
+{% endif %}

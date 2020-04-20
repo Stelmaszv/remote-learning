@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div>
+                <h2>Dodaj ucznia</h2>
+                <form action='.' method='POST'>
+                                {% if form.errors %}
+                <p> there ara erros in the form </p>
+            {% endif %}
+                {% csrf_token %}
+                    {{form}}
+                <input type='submit' value='Save' />
+                </form>
+    </div>
+{% endblock %}
