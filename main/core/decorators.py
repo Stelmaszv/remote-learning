@@ -14,3 +14,17 @@ def not_login(func):
             return redirect('/')
         return value
     return wrapper
+def login_manager(func):
+    def wrapper(*args, **kwargs):
+        value = func(*args, **kwargs)
+        if args[1].user.type.name !='manager':
+            return redirect('/')
+        return value
+    return wrapper
+def login_educator(func):
+    def wrapper(*args, **kwargs):
+        value = func(*args, **kwargs)
+        if args[1].user.type.name !='educator':
+            return redirect('/')
+        return value
+    return wrapper

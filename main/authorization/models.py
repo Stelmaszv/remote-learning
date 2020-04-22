@@ -30,8 +30,8 @@ class AccountType(models.Model):
     def __str__(self):
         return self.name
 class Account(AbstractBaseUser):
-    first_name          = models.CharField(max_length=250, null=True, blank=True)
-    last_name           = models.CharField(max_length=250, null=True, blank=True)
+    first_name          = models.CharField(max_length=250,verbose_name="imię", null=True, blank=True)
+    last_name           = models.CharField(max_length=250, null=True,verbose_name="nazwisko", blank=True)
     email               = models.EmailField(verbose_name="email",max_length=50,unique=True)
     username            = models.CharField(max_length=30)
     date_joined         = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
@@ -40,10 +40,11 @@ class Account(AbstractBaseUser):
     is_active           = models.BooleanField(default=True)
     is_staff            = models.BooleanField(default=True)
     is_superuser        = models.BooleanField(default=False)
-    type                = models.ForeignKey(AccountType, on_delete=models.SET_NULL, null=True, blank=True,related_name='type')
-    is_student          = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True,related_name='student')
-    is_teacher          = models.ManyToManyField(Subject, null=True, blank=True)
-    is_educator         = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True,related_name='educator')
+    type                = models.ForeignKey(AccountType, on_delete=models.SET_NULL, null=True, blank=True,related_name='type',verbose_name="Typ uprawnień")
+    is_student          = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True,related_name='student',verbose_name="Czy jest studentem ? (jesli nie pomiń)")
+    is_teacher          = models.ManyToManyField(Subject, null=True, blank=True,verbose_name="Czy jest nauczycielem dodaj przemioty jakie uczy ? (jesli nie pomiń)")
+    is_educator         = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True,related_name='educator', verbose_name="Czy jest wychowcą dodaj klase  ? (jesli nie pomiń)")
+    classrooms           = models.ManyToManyField(Classroom, null=True, blank=True,related_name='classromms',verbose_name="Jeśli jest nauczycielem to jakich przemiotów uczy ? (jesli nie to pomiń)")
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
     object=AccountManager()

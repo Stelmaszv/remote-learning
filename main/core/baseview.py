@@ -23,8 +23,7 @@ class baseForm(TemplateView):
     def get(self,request,*args,**kwargs):
         return self.addGet(request)
     def setContext(self,request):
-        self.items = []
-        self.context = {'form': self.form, 'items': self.items}
+        self.context = {'form': self.form}
     def postInit(self,request,*args, **kwargs):
         pass
     def postSave(self,request, *args, **kwargs):

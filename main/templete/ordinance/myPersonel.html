@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <table class="table table-bordered table-dark">
+          <thead>
+            <tr>
+                  <th scope="col"> Nr </th>
+                  <th scope="col">Imię</th>
+                  <th scope="col">Nazwisko</th>
+                  <th scope="col">Typ uprawnień </th>
+                  <th scope="col">ostatnie Logowanie</th>
+                  <th scope="col">Akcjie</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items %}
+                    <tr>
+                      <th scope="row">{{forloop.counter}}</th>
+                        <td>{{item.first_name}}</td>
+                        <td>{{item.last_name}}</td>
+                        <td>{{item.type}}
+                            {% if item.type.name == 'student' %}
+                                - {{item.is_student}}
+                            {% endif %}
+                            {% if item.type.name == 'educator' %}
+                                - {{item.is_educator}}
+                            {% endif %}
+                        </td>
+                        <td>{{item.last_login}}</td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+    </div>
+{% endblock %}

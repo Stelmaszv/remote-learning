@@ -1,7 +1,73 @@
-{% if user.is_authenticated %}
-    <div>{{ user.username }} </div>
-        {% if user.type.name == 'educator' %}
-            Klasa
-            <a href="">Dodaj Ucznia</a>
-        {% endif %}
-{% endif %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+              <a class="navbar-brand" href="#">Scholl Menager</a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+                      <li class="nav-item">
+                        <a class="nav-link" href="/">Strona Główna</a>
+                      </li>
+                    {% if user.type.name == 'educator' %}
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Klasa
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="{% url 'main:addStudent' %}">Dodaj Ucznia</a>
+                          <a class="dropdown-item" href="{% url 'main:myStudents' %}">Moi uczniowie</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="#">Something else here</a>
+                        </div>
+                      </li>
+                    {% endif %}
+                    {% if user.type.name == 'manager' %}
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Szkoła
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'main:addPersonel' %}">Dodaj Personel</a>
+                            <a class="dropdown-item" href="{% url 'main:myPersonel' %}">Moi Personel</a>
+                        </div>
+                      </li>
+                    {% endif %}
+                    {% if user.is_teacher  %}
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Lekcjie
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{% url 'main:addLesson' %}">Dodaj Lekcjie</a>
+                            <a class="dropdown-item" href="{% url 'main:myLesson' %}">Moje lekcjie</a>
+                        </div>
+                      </li>
+                    {% endif %}
+                    {% if user.type.name == 'student'  %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Moje oceny</a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          {{ user.username }}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="#">Wyloguj</a>
+                        </div>
+                    </li>
+                  </ul>
+
+              </div>
+        </nav>
+

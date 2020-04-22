@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <table class="table table-bordered table-dark">
+          <thead>
+            <tr>
+                  <th scope="col">Temat</th>
+                  <th scope="col">Klasa</th>
+                  <th scope="col">Przedmiot</th>
+                  <th scope="col">Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in items %}
+                    <tr>
+                        <th scope="row">{{item.theme}}</th>
+                        <th scope="col">{{item.classroom}}</th>
+                        <th>fqef</th>
+                        <th scope="col">{{item.data}}</th>
+                    </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+    </div>
+{% endblock %}

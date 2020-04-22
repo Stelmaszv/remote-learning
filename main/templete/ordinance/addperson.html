@@ -1,14 +1,17 @@
 {% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
 {% block content %}
-    <div>
-                <h2>Dodaj ucznia</h2>
-                <form action='.' method='POST'>
-                                {% if form.errors %}
-                <p> there ara erros in the form </p>
-            {% endif %}
-                {% csrf_token %}
-                    {{form}}
-                <input type='submit' value='Save' />
-                </form>
+  <div class="container">
+  <div class="row">
+    <div class="col-12">
+          <form method="post" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-success">Save person</button>
+          </form>
     </div>
+  </div>
+</div>
 {% endblock %}
