@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="row">
+                <div class="col-6">{{context.teacher}} ({{context.subjects}})</div>
+                <div class="col-6">{{context.data}}</div>
+            </div>
+            <h2>{{ context.theme }}</h2>
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+        </div>
+    </div>
+    <table class="table table-bordered table-dark">
+          <thead>
+              <tr>
+                  <th scope="col"> Nr </th>
+                  <th scope="col">Imię</th>
+                  <th scope="col">Nazwisko</th>
+                  <th scope="col">Odebrane</th>
+                  <th scope="col">Ocena</th>
+                  <th scope="col">Ostatnie Logowanie</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for item in students %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{item.first_name}}</td>
+                    <td>{{item.last_name}}</td>
+                    <td>
+                        {% for task in context.tasks.all %}
+                            {% if task.student.id ==  item.id %}
+                                V
+                            {% else %}
+                                X
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for task in context.tasks.all %}
+                            {% if task.student.id ==  item.id %}
+                                {{task.rote}}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{item.last_login}}
+                    </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+</div>
+
+{% endblock %}

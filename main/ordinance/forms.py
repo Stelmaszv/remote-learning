@@ -14,6 +14,7 @@ class Lesson(forms.ModelForm):
          fields = [
              'theme',
              'description',
+             'taskfile',
              'teacher',
              'classroom',
              'subjects',

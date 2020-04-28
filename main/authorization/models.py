@@ -42,9 +42,9 @@ class Account(AbstractBaseUser):
     is_superuser        = models.BooleanField(default=False)
     type                = models.ForeignKey(AccountType, on_delete=models.SET_NULL, null=True, blank=True,related_name='type',verbose_name="Typ uprawnień")
     is_student          = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True,related_name='student',verbose_name="Czy jest studentem ? (jesli nie pomiń)")
-    is_teacher          = models.ManyToManyField(Subject, null=True, blank=True,verbose_name="Czy jest nauczycielem dodaj przemioty jakie uczy ? (jesli nie pomiń)")
+    is_teacher          = models.ManyToManyField(Subject, blank=True,verbose_name="Czy jest nauczycielem dodaj przemioty jakie uczy ? (jesli nie pomiń)")
     is_educator         = models.ForeignKey(Classroom, on_delete=models.SET_NULL, null=True, blank=True,related_name='educator', verbose_name="Czy jest wychowcą dodaj klase  ? (jesli nie pomiń)")
-    classrooms           = models.ManyToManyField(Classroom, null=True, blank=True,related_name='classromms',verbose_name="Jeśli jest nauczycielem to jakich przemiotów uczy ? (jesli nie to pomiń)")
+    classrooms           = models.ManyToManyField(Classroom, blank=True,related_name='classromms',verbose_name="Jeśli jest nauczycielem to jakich przemiotów uczy ? (jesli nie to pomiń)")
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
     object=AccountManager()

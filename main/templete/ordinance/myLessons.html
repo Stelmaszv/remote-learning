@@ -14,7 +14,7 @@
               <tbody>
                 {% for item in items %}
                     <tr>
-                        <th scope="row">{{item.theme}}</th>
+                        <th scope="row"><a href="{% url 'main:ShowLesson' item.id %}">{{item.theme}}</a></th>
                         <th scope="col">{{item.classroom}}</th>
                         <th>fqef</th>
                         <th scope="col">{{item.data}}</th>

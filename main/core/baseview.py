@@ -48,14 +48,16 @@ class baseCreate(baseForm):
     success_url = '/mycompany/'
     data=[]
     def setform(self,request):
+        self.id_ = self.kwargs.get("id")
         return self.form(request.POST)
 class baseShowView(TemplateView):
     def get(self,request,*args,**kwargs):
+        self.id_ = self.kwargs.get("id")
         self.setContext()
-        return render(request,self.template,self.context)
+        return render(request,self.template_name,self.context)
     def get_object(self):
-        id_ = self.kwargs.get("id")
-        return get_object_or_404(self.getObject, id=id_)
+        self.id = self.kwargs.get("id")
+        return get_object_or_404(self.getObject, id=self.id)
     def setContext(self):
         self.context={'context':self.get_object()}
 class baseUpdateView(baseForm):

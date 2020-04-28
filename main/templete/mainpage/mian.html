@@ -1,4 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
-    MAIN
+    {% if request.user.type.name == 'student' %}
+        {% for item in list %}
+            {% if request.user.is_student.name == item.classroom.name  %}
+                <div class="container">
+                  <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                            <div class="row">
+                                <div class="col-6">{{item.teacher}} ({{item.subjects}})</div><div class="col-6">{{item.data}}</div>
+                            </div>
+                            <h2>{{ item.theme }}</h2>
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+                            lu
+                            <div class="row">
+                                 {% if item.taskfile %}
+                                    <div class="col-6"><a href="{{ item.taskfile.url }}">pobierz zadnie</a></div>
+                                {% endif %}
+                                {% if item.if_Recived %}
+                                    Odebrane
+                                {% else  %}
+                                    <div class="col-6"><a href="{% url 'main:ConfirmRecivedLesson' item.id %}">Potwierz odebranie</a></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                  </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
 {% endblock %}

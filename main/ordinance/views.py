@@ -1,12 +1,12 @@
-from core.baseview import baseCreate,baseListView;
+from core.baseview import baseCreate,baseListView,baseShowView;
 from core.decorators import login_required,login_manager,login_educator
 from authorization.forms import educator,manager
 from .forms import Lesson as LessonForm
-from .models import Lesson
+from .models import Lesson,Tasks
 from authorization.models import Account
 from authorization.formMenager import passwordGeneartor
 from helpel import email
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404,redirect
 class add_Student(baseCreate):
     template_name = 'ordinance/addperson.html'
     success_url = '/ordinance/myStudents/'
@@ -65,6 +65,28 @@ class myLesson(baseListView):
         self.context = {
             'items': Lesson.objects.all().order_by('-data')
         }
+class ShowLesson(baseShowView):
+    template_name='ordinance/showlesson.html'
+    getObject=Lesson
+    def setContext(self):
+        self.context={
+            'context':self.get_object(),
+            'students':self.get_students()
+        }
+    def get_students(self):
+        return Account.objects.filter(is_student__name=self.get_object().classroom).order_by('-last_name')
+class ConfirmRecivedLesson(ShowLesson):
+    getObject = Lesson
+    template_name = 'ordinance/showlesson.html'
+    success_url = '/'
+    def get(self, request, *args, **kwargs):
+        id_ = self.kwargs.get("id")
+        task=Tasks(student=request.user,data_recived=True,rote=0)
+        task.save()
+        myTask=Lesson.objects.get(id=id_)
+        myTask.tasks.add(task)
+        myTask.save
+        return redirect(self.success_url)
 class myPersonel(baseListView):
     template_name = 'ordinance/myPersonel.html'
     @login_manager
