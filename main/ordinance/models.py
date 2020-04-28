@@ -1,6 +1,7 @@
 from django.db import models
 class Classroom(models.Model):
     name = models.CharField(max_length=30, unique=True)
+    students = models.ManyToManyField(to='authorization.Account')
     def __str__(self):
         return self.name
 class Subject(models.Model):
@@ -9,10 +10,12 @@ class Subject(models.Model):
         return self.name
 class Tasks(models.Model):
     student        = models.ForeignKey(to='authorization.Account', on_delete=models.SET_NULL, null=True, blank=True)
-    data_recived   = models.DateTimeField(verbose_name="data recived", auto_now_add=True)
-    data_send      = models.DateTimeField(verbose_name="data_send", auto_now_add=True)
     data_recived   = models.BooleanField(default=False)
+    taskfile = models.FileField(upload_to='media', null=True, blank=True, verbose_name="Dodaj Plik")
+    lessons = models.ForeignKey(to='ordinance.Lesson', on_delete=models.SET_NULL, null=True, blank=True,related_name='lesson')
     rote = models.IntegerField()
+    def __str__(self):
+        return self.student.username
 class Lesson(models.Model):
     theme         = models.CharField(max_length=240,verbose_name="Temat zajęc")
     description   = models.TextField(verbose_name="Opis zajęc")

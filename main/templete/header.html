@@ -53,9 +53,15 @@
                       </li>
                     {% endif %}
                     {% if user.type.name == 'student'  %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Moje oceny</a>
-                    </li>
+                      <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          zadania i oceny
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <a class="nav-link" href="#">Moje oceny</a>
+                          <a class="nav-link" href="{% url 'main:myTasks' %}">Moje Zadania</a>
+                        </div>
+                      </li>
                     {% endif %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

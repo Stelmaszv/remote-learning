@@ -1,5 +1,5 @@
 from django import forms
-from .models import (Lesson,Classroom)
+from .models import (Lesson,Classroom,Tasks)
 from authorization.models import Account
 class Lesson(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -18,4 +18,16 @@ class Lesson(forms.ModelForm):
              'teacher',
              'classroom',
              'subjects',
+        ]
+class TasksSolution(forms.ModelForm):
+    class Meta:
+         model = Tasks
+         fields = [
+             'taskfile'
+        ]
+class TasksSetRote(forms.ModelForm):
+    class Meta:
+         model = Tasks
+         fields = [
+             'rote'
         ]

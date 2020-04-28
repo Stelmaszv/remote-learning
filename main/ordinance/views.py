@@ -1,8 +1,8 @@
-from core.baseview import baseCreate,baseListView,baseShowView;
+from core.baseview import baseCreate,baseListView,baseShowView,baseUpdateView;
 from core.decorators import login_required,login_manager,login_educator
 from authorization.forms import educator,manager
-from .forms import Lesson as LessonForm
-from .models import Lesson,Tasks
+from .forms import Lesson as LessonForm,TasksSolution,TasksSetRote
+from .models import Lesson,Tasks,Classroom
 from authorization.models import Account
 from authorization.formMenager import passwordGeneartor
 from helpel import email
@@ -48,6 +48,14 @@ class addLesson(baseCreate):
     def get(self, request, *args, **kwargs):
         self.form.email=request.user.email
         return self.addGet(request)
+    def postSave(self, request, *args, **kwargs):
+        classrom=Classroom.objects.get(name=self.item.classroom).students.all()
+        for student in classrom:
+            task = Tasks(student=student, data_recived=False,lessons=self.item,rote=0)
+            task.save()
+            self.item.tasks.add(task)
+            self.item.save()
+
 class myStudents(baseListView):
     template_name = 'ordinance/myStudents.html'
     @login_educator
@@ -65,6 +73,48 @@ class myLesson(baseListView):
         self.context = {
             'items': Lesson.objects.all().order_by('-data')
         }
+class myTask(baseListView):
+    template_name = 'ordinance/myTasks.html'
+    def get(self, request, *args, **kwargs):
+        return self.addGet(request)
+    def setContext(self, request):
+        self.context = {
+            'items': self.set_Data(self.set_Objects(request),request)
+        }
+    def set_Data(self,objects,request):
+        for item in objects:
+            for task in item.tasks.all():
+                if task.student == request.user:
+                    item.idAction=task.id
+                    item.stan = 'ToAceptRecived'
+                    if task.data_recived == True:
+                        item.stan = 'ConfirmRecived'
+                    if task.rote>0:
+                        item.stan = 'rote'
+                        item.rote = task.rote
+        return objects
+    def set_Objects(self,request):
+        lesson = Lesson.objects.all()
+        lessonNewArray=[];
+        for item in lesson:
+            if item.classroom == request.user.is_student:
+                lessonNewArray.append(item)
+        return lessonNewArray
+class sentSolution(baseUpdateView):
+    success_url = '/'
+    template_name = 'ordinance/sentSolution.html'
+    getObject = Tasks
+    form = TasksSolution
+    def setContext(self,request, *args, **kwarg):
+        self.context={
+            'item':Lesson.objects.get(id=self.kwargs.get("lessonId")),
+            'form':self.form
+        }
+class setRote(baseUpdateView):
+    success_url = '/'
+    template_name = 'ordinance/sentSolution.html'
+    getObject = Tasks
+    form = TasksSetRote
 class ShowLesson(baseShowView):
     template_name='ordinance/showlesson.html'
     getObject=Lesson
@@ -74,7 +124,14 @@ class ShowLesson(baseShowView):
             'students':self.get_students()
         }
     def get_students(self):
-        return Account.objects.filter(is_student__name=self.get_object().classroom).order_by('-last_name')
+        tasks=self.get_object().tasks.all()
+        for task in tasks:
+            task.status = 'ToAceptRecived'
+            if task.data_recived == True:
+                task.status= 'ConfirmRecived'
+            if  task.taskfile:
+                task.status = ''
+        return tasks
 class ConfirmRecivedLesson(ShowLesson):
     getObject = Lesson
     template_name = 'ordinance/showlesson.html'

@@ -22,10 +22,10 @@
           <thead>
               <tr>
                   <th scope="col"> Nr </th>
-                  <th scope="col">Imię</th>
-                  <th scope="col">Nazwisko</th>
+                  <th scope="col">Imię i Nazwisko</th>
                   <th scope="col">Odebrane</th>
                   <th scope="col">Ocena</th>
+                  <th scope="col">actions</th>
                   <th scope="col">Ostatnie Logowanie</th>
               </tr>
           </thead>
@@ -33,26 +33,26 @@
             {% for item in students %}
                 <tr>
                     <th scope="row">{{forloop.counter}}</th>
-                    <td>{{item.first_name}}</td>
-                    <td>{{item.last_name}}</td>
+                    <td>{{item.student}}</td>
                     <td>
-                        {% for task in context.tasks.all %}
-                            {% if task.student.id ==  item.id %}
-                                V
-                            {% else %}
-                                X
-                            {% endif %}
-                        {% endfor %}
+                        {% if item.status == 'ToAceptRecived' %}
+                            nie odebrane
+                        {% endif %}
+                        {% if item.status == 'ConfirmRecived' %}
+                            Odebranie
+                        {% endif %}
+                        {% if item.taskfile  %}
+                            <a href="{{item.taskfile.url }}">pobierz zadnie</a>
+                        {% endif %}
                     </td>
                     <td>
-                        {% for task in context.tasks.all %}
-                            {% if task.student.id ==  item.id %}
-                                {{task.rote}}
-                            {% endif %}
-                        {% endfor %}
+                        {{item.rote}}
                     </td>
                     <td>
-                        {{item.last_login}}
+                       <a href="{% url 'main:setRote' item.id  %}"> wystaw / zmień  ocene</a>
+                    </td>
+                    <td>
+                        {{item.student.last_login}}
                     </td>
                 </tr>
             {% endfor %}
