@@ -19,6 +19,15 @@ class Lesson(forms.ModelForm):
              'classroom',
              'subjects',
         ]
+class AccountForm(forms.ModelForm):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField(widget=forms.Textarea)
+    class Meta:
+         model = Account
+         fields = [
+             'subject',
+             'message'
+        ]
 class TasksSolution(forms.ModelForm):
     class Meta:
          model = Tasks

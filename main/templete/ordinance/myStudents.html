@@ -6,8 +6,7 @@
           <thead>
               <tr>
                   <th scope="col"> Nr </th>
-                  <th scope="col">Imię</th>
-                  <th scope="col">Nazwisko</th>
+                  <th scope="col">Imię i Nazwisko</th>
                   <th scope="col">ostatnie Logowanie</th>
                   <th scope="col">Akcjie</th>
               </tr>
@@ -16,10 +15,12 @@
                   {% for item in items %}
                   <tr>
                       <th scope="row">{{forloop.counter}}</th>
-                      <td>{{item.first_name}}</td>
-                      <td>{{item.last_name}}</td>
+                      <td>{{item}}</td>
                       <td>{{item.last_login}}</td>
-                      <td></td>
+                      <td>
+                          <a href="{% url 'main:sentMess' item.id %}">Wyslij Wadmosc</a>
+                          <a href="{% url 'main:passwordReset' item.id %}">Zresetuj hasło</a>
+                      </td>
                   </tr>
                   {% endfor %}
               </tbody>

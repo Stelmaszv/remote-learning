@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container">
+        <table class="table table-bordered table-dark">
+          <thead>
+              <tr>
+                  <th scope="col">Przedmiot</th>
+                   <th scope="col">Lekcjia</th>
+                  <th scope="col">Ocena</th>
+                  <th scope="col">Data</th>
+              </tr>
+          </thead>
+              <tbody>
+              {% for item in items %}
+                    <tr>
+                        <th scope="col">{{item.lessons.subjects}}</th>
+                        <th scope="row"><a href="{% url 'main:ShowLesson' item.lessons.id %}">{{item.lessons}}</a></th>
+                        <th scope="col">{{item.rote}}</th>
+                        <th scope="col"></th>
+                    </tr>
+              {% endfor %}
+              </tbody>
+        </table>
+    </div>
+{% endblock %}

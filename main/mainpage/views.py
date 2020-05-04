@@ -2,6 +2,7 @@ from core.baseview import baseListView
 from ordinance.models import Lesson
 from django.contrib.auth.forms import UserCreationForm
 from core.decorators import login_required
+from authorization.models import Account
 class main(baseListView):
     success_url = 'auth/accounts/login/'
     template_name = 'mainpage/mian.html'

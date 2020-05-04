@@ -53,12 +53,12 @@ class baseCreate(baseForm):
 class baseShowView(TemplateView):
     def get(self,request,*args,**kwargs):
         self.id_ = self.kwargs.get("id")
-        self.setContext()
+        self.setContext(request)
         return render(request,self.template_name,self.context)
     def get_object(self):
         self.id = self.kwargs.get("id")
         return get_object_or_404(self.getObject, id=self.id)
-    def setContext(self):
+    def setContext(self,request):
         self.context={'context':self.get_object()}
 class baseUpdateView(baseForm):
     success_url = '/mycompany/'

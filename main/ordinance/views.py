@@ -1,12 +1,12 @@
 from core.baseview import baseCreate,baseListView,baseShowView,baseUpdateView;
 from core.decorators import login_required,login_manager,login_educator
 from authorization.forms import educator,manager
-from .forms import Lesson as LessonForm,TasksSolution,TasksSetRote
+from .forms import Lesson as LessonForm,TasksSolution,TasksSetRote,AccountForm
 from .models import Lesson,Tasks,Classroom
 from authorization.models import Account
 from authorization.formMenager import passwordGeneartor
 from helpel import email
-from django.shortcuts import get_object_or_404,redirect
+from django.shortcuts import redirect,render
 class add_Student(baseCreate):
     template_name = 'ordinance/addperson.html'
     success_url = '/ordinance/myStudents/'
@@ -55,7 +55,6 @@ class addLesson(baseCreate):
             task.save()
             self.item.tasks.add(task)
             self.item.save()
-
 class myStudents(baseListView):
     template_name = 'ordinance/myStudents.html'
     @login_educator
@@ -115,6 +114,18 @@ class setRote(baseUpdateView):
     template_name = 'ordinance/sentSolution.html'
     getObject = Tasks
     form = TasksSetRote
+class myRotes(baseListView):
+    getObject = Tasks
+    template_name = 'ordinance/myrotes.html'
+    def get(self, request, *args, **kwargs):
+        return self.addGet(request)
+    def setContext(self,request):
+        self.context={
+            'items':self.get_object(request),
+        }
+    def get_object(self,request):
+       query=self.getObject.objects.filter(student__email=request.user.email)
+       return query
 class ShowLesson(baseShowView):
     template_name='ordinance/showlesson.html'
     getObject=Lesson
@@ -132,6 +143,35 @@ class ShowLesson(baseShowView):
             if  task.taskfile:
                 task.status = ''
         return tasks
+class sentMess(baseUpdateView):
+    success_url = '/ordinance/myStudents/'
+    template_name = 'ordinance/sentMess.html'
+    getObject = Account
+    form = AccountForm
+    def post(self,request, *args, **kwargs):
+        self.setContext(request)
+        self.form = self.setform(request)
+        if self.form.is_valid():
+            email().sent(self.form.cleaned_data['subject'], self.form.cleaned_data['message'], [self.get_object().email])
+            return redirect(self.success_url)
+        else:
+            self.setContext(request)
+            return render(request, self.template_name, self.context)
+        return render(request, self.template_name, self.context)
+class passwordReset(baseShowView):
+    template_name = 'ordinance/showlesson.html'
+    success_url = '/ordinance/myStudents/'
+    getObject = Account
+    def get(self, request, *args, **kwargs):
+
+        password = passwordGeneartor().setPassword()
+        print(password)
+        item = Account.objects.get(id=self.kwargs.get("id"))
+        mess= 'Email : '+item.email+' hasło: '+password
+        email().sent('Nowe hasło', mess, [item.email])
+        item.set_password(password)
+        item.save()
+        return redirect(self.success_url)
 class ConfirmRecivedLesson(ShowLesson):
     getObject = Lesson
     template_name = 'ordinance/showlesson.html'
