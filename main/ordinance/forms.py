@@ -1,5 +1,5 @@
 from django import forms
-from .models import (Lesson,Classroom,Tasks)
+from .models import (Lesson,Classroom,Tasks,Dashbord)
 from authorization.models import Account
 class Lesson(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -39,4 +39,12 @@ class TasksSetRote(forms.ModelForm):
          model = Tasks
          fields = [
              'rote'
+        ]
+class DashbordForm(forms.ModelForm):
+    class Meta:
+         model = Dashbord
+         fields = [
+             'theme',
+             'description',
+             'place'
         ]

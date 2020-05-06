@@ -1,8 +1,5 @@
 from core.baseview import baseListView
 from ordinance.models import Lesson,Dashbord
-from django.contrib.auth.forms import UserCreationForm
-from core.decorators import login_required
-from authorization.models import Account
 class main(baseListView):
     template_name = 'mainpage/mian.html'
     def setContext(self, request):
@@ -20,7 +17,9 @@ class abstractMain():
         list = []
         dasbord = Dashbord.objects.all()
         for item in dasbord:
-            if request.user.type.name==item.place.name or item.place.name=='all':
+            if request.user.type.name==item.place.name \
+                    or item.place.name=='all' \
+                    or item.author==request.user:
                 list.append(item)
         return list;
 class educator(abstractMain):
@@ -31,7 +30,10 @@ class studnet(abstractMain):
         list=[]
         dasbord= Dashbord.objects.all()
         for item in dasbord:
-            if request.user.type.name==item.place.name and self.if_in_class(request, item) and item.type.name=='lesson' or item.type.name=='normal':
+            if request.user.type.name==item.place.name \
+                    and self.if_in_class(request, item)\
+                    and item.type.name=='lesson' \
+                    or item.type.name=='normal':
                 list.append(item)
         return  list
     def if_in_class(self,request,object):

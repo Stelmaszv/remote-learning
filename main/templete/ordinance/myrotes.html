@@ -17,7 +17,7 @@
                         <th scope="col">{{item.lessons.subjects}}</th>
                         <th scope="row"><a href="{% url 'main:ShowLesson' item.lessons.id %}">{{item.lessons}}</a></th>
                         <th scope="col">{{item.rote}}</th>
-                        <th scope="col"></th>
+                        <th scope="col">{{item.rotedata}}</th>
                     </tr>
               {% endfor %}
               </tbody>

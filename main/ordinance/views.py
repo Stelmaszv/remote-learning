@@ -1,12 +1,13 @@
 from core.baseview import baseCreate,baseListView,baseShowView,baseUpdateView;
 from core.decorators import login_required,login_manager,login_educator
 from authorization.forms import educator,manager
-from .forms import Lesson as LessonForm,TasksSolution,TasksSetRote,AccountForm
-from .models import Lesson,Tasks,Classroom
-from authorization.models import Account
+from .forms import Lesson as LessonForm,TasksSolution,TasksSetRote,AccountForm,DashbordForm
+from .models import Lesson,Tasks,Classroom,Dashbord,DashbordType
+from authorization.models import Account,AccountType
 from authorization.formMenager import passwordGeneartor
 from helpel import email
 from django.shortcuts import redirect,render
+import datetime
 class add_Student(baseCreate):
     template_name = 'ordinance/addperson.html'
     success_url = '/ordinance/myStudents/'
@@ -41,6 +42,15 @@ class add_Personel(baseCreate):
         item.staff = True
         item.save()
         email().sent('Dane do konta', 'kotek', ['zupartl@johnderasia.com'])
+class addDashbord(baseCreate):
+    template_name = 'ordinance/addLesson.html'
+    success_url = '/'
+    form = DashbordForm
+    def postSave(self, request, *args, **kwargs):
+        Type = DashbordType.objects.get(name='normal')
+        self.item.author=request.user
+        self.item.type=Type
+        self.item.save()
 class addLesson(baseCreate):
     template_name = 'ordinance/addLesson.html'
     success_url = '/'
@@ -48,6 +58,10 @@ class addLesson(baseCreate):
     def get(self, request, *args, **kwargs):
         self.form.email=request.user.email
         return self.addGet(request)
+    def post(self,request, *args, **kwargs):
+        self.form.email = request.user.email
+        print(request)
+        return self.addPost(request)
     def postSave(self, request, *args, **kwargs):
         classrom=Classroom.objects.get(name=self.item.classroom).students.all()
         for student in classrom:
@@ -55,6 +69,10 @@ class addLesson(baseCreate):
             task.save()
             self.item.tasks.add(task)
             self.item.save()
+        Type=DashbordType.objects.get(name='lesson')
+        place=AccountType.objects.get(name='student')
+        dashbord=Dashbord(theme=self.item.theme,description=self.item.description,place=place,lesson=self.item,type=Type,author=request.user)
+        dashbord.save()
 class myStudents(baseListView):
     template_name = 'ordinance/myStudents.html'
     @login_educator
@@ -114,6 +132,9 @@ class setRote(baseUpdateView):
     template_name = 'ordinance/sentSolution.html'
     getObject = Tasks
     form = TasksSetRote
+    def postSave(self, request, *args, **kwargs):
+        self.item.rotedata=datetime.datetime.now()
+        self.item.save()
 class myRotes(baseListView):
     getObject = Tasks
     template_name = 'ordinance/myrotes.html'
@@ -129,7 +150,7 @@ class myRotes(baseListView):
 class ShowLesson(baseShowView):
     template_name='ordinance/showlesson.html'
     getObject=Lesson
-    def setContext(self):
+    def setContext(self,request):
         self.context={
             'context':self.get_object(),
             'students':self.get_students()
@@ -193,5 +214,4 @@ class myPersonel(baseListView):
         self.context = {
             'items': Account.objects.filter(is_student__name=request.user.is_educator).order_by('-last_name')
         }
-
 

@@ -1,5 +1,5 @@
 from django.urls import path
-from ordinance.views import (add_Student,add_Personel,myStudents,myPersonel,myTask,addLesson,myLesson,ConfirmRecivedLesson,ShowLesson,sentSolution,setRote,myRotes,passwordReset,sentMess)
+from ordinance.views import (add_Student,add_Personel,myStudents,myPersonel,myTask,addLesson,myLesson,ConfirmRecivedLesson,ShowLesson,sentSolution,setRote,myRotes,passwordReset,sentMess,addDashbord)
 app_name = 'main'
 urlpatterns = [
     path('addStudent/',add_Student.as_view(),name="addStudent"),
@@ -7,6 +7,7 @@ urlpatterns = [
     path('myStudents/',myStudents.as_view(),name="myStudents"),
     path('myPersonel/',myPersonel.as_view(),name="myPersonel"),
     path('addLesson/',addLesson.as_view(),name="addLesson"),
+    path('addDashbord/',addDashbord.as_view(),name="addDashbord"),
     path('myLesson/',myLesson.as_view(),name="myLesson"),
     path('myTasks/',myTask.as_view(),name="myTasks"),
     path('myRotes/',myRotes.as_view(),name="myRotes"),

@@ -36,6 +36,8 @@ class baseForm(TemplateView):
         self.postSave(request)
         return redirect(self.success_url)
     def post(self,request, *args, **kwargs):
+        return self.addPost(request)
+    def addPost(self,request):
         self.setContext(request)
         self.form = self.setform(request)
         if self.form.is_valid():

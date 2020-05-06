@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     student
-    {{list}}
+    {% for item in list %}
+        {{item}}
+    {% endfor %}
 {% endblock %}
