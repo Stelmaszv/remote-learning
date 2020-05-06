@@ -27,4 +27,19 @@ class Lesson(models.Model):
     tasks         = models.ManyToManyField(Tasks)
     def __str__(self):
         return self.theme
+class DashbordType(models.Model):
+    name = models.CharField(max_length=240)
+    def __str__(self):
+        return self.name
+class Dashbord(models.Model):
+    theme         = models.CharField(max_length=240,verbose_name="Nagłówek")
+    description   = models.TextField(verbose_name="Treść")
+    file = models.FileField(upload_to='media', null=True, blank=True, verbose_name="Dodaj Plik")
+    place =  models.ForeignKey(to='authorization.AccountType', on_delete=models.SET_NULL, null=True, blank=True,related_name='place',verbose_name="Typ uprawnień")
+    lesson = models.ForeignKey(to='ordinance.Lesson', on_delete=models.SET_NULL, null=True, blank=True,related_name='lessons')
+    type = models.ForeignKey(DashbordType, on_delete=models.SET_NULL, null=True, blank=True,related_name='lessons')
+    data = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.theme
+
 
