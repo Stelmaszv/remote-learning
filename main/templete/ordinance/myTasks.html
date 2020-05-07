@@ -2,8 +2,8 @@
 {% load crispy_forms_tags %}
 {% block content %}
         <div class="container">
-        <table class="table table-bordered table-dark">
-          <thead>
+        <table class="table">
+          <thead class="thead-dark">
             <tr>
                   <th scope="col">Nauczyciel</th>
                   <th scope="col">Przedmiot</th>
@@ -20,7 +20,7 @@
                         <td scope="row">{{item.subjects}}</td>
                         <td scope="row"><a href="{% url 'main:ShowLesson' item.id %}">{{item.theme}}</a></td>
                         <td scope="row">{{item.data}}</td>
-                        <td scope="row"><a href="{% url 'main:sentSolution' item.idAction item.id  %}">wyslij rozwiązanie </a></td>
+                        <td scope="row"><a href="{% url 'main:sentSolution' item.idAction  %}" class="btn btn-primary">wyslij rozwiązanie</a></td>
                         <td scope="row">
                             {% if item.stan == 'ConfirmRecived' %}
                                 Potwierdzone odebranie

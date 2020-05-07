@@ -2,21 +2,46 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="row">
-                <div class="col-6">{{item.teacher}} ({{item.subjects}})</div>
-                <div class="col-6">{{item.data}}</div>
+        <div class="offset-2 col-8 dashbordItem">
+        <div class="card text-center">
+            <div class="card-header">
+                 {{item.lessons.teacher}} ({{item.lessons.subjects.name}})
             </div>
-            <h2>{{ item.theme }}</h2>
-            {{ item.description }}
+            <div class="card-body">
+                <h5 class="card-title">Temat : {{item.lessons.theme}}</h5>
+                <p class="card-text">
+                    <p class="lead">
+                        {{item.lessons.description}}
+                    </p>
+                </p>
+                    {% if item.lessons %}
+                    <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <a href="{{ item.lesson.taskfile.url }}" class="btn btn-primary">Pobierz zadnie</a>
+                            {% for el in item.lessons.tasks.all %}
+                                {% if el.student.id == request.user.id %}
+                                    {% if el.data_recived %}
+                                        <div type="button" class="btn btn-success">Odebrane</div>
+                                    {% else %}
+                                        <a href="{% url 'main:ConfirmRecivedLesson' el.id %}" class="btn btn-warning">nie potwierdzone</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+            </div>
+            <div class="card-footer text-muted">
+                {{ item.lessons.data|date:"H:m-d.m.Y"|lower }}
+            </div>
         </div>
     </div>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-primary">Upload book</button>
-    </form>
+    <h2 style="text-align: center;">Wyślij rozwiązanie</h2>
+    <div class="row">
+      <div class="col-12">
+          {% include 'base/form.html' %}
+      </div>
+    </div>
 </div>
 
 {% endblock %}

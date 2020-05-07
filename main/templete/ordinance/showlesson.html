@@ -2,62 +2,90 @@
 {% load crispy_forms_tags %}
 {% block content %}
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 offset-md-2">
-            <div class="row">
-                <div class="col-6">{{context.teacher}} ({{context.subjects}})</div>
-                <div class="col-6">{{context.data}}</div>
+    <div class="offset-2 col-8 showLesson">
+        <div class="card text-center">
+            <div class="card-header">
+                {{context.teacher}} ({{context.subjects.name}})
             </div>
-            <h2>{{ context.theme }}</h2>
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
-            gwrgwr w hh wh wrh rwhjwrj wjwrj wjw ej
+            <div class="card-body">
+                <h5 class="card-title">Temat : {{context.theme}}</h5>
+                <p class="card-text">
+                    <p class="lead">
+                        {{context.description}}
+                    </p>
+                </p>
+                {% if context.teacher == request.user %}
+                <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <a href="{{ context.taskfile.url }}" class="btn btn-primary">Pobierz zadnie</a>
+                    </div>
+                </div>
+                {% else %}
+                    <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                        <a href="{{ item.taskfile.url }}" class="btn btn-primary">Pobierz zadnie</a>
+                            {% for el in context.tasks.all %}
+                                {% if el.student.id == request.user.id %}
+                                    {% if el.data_recived %}
+                                        <div type="button" class="btn btn-success">Odebrane</div>
+                                    {% else %}
+                                        <a href="{% url 'main:ConfirmRecivedLesson' el.id %}" class="btn btn-warning">nie potwierdzone</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="card-footer text-muted">
+                {{ context.data|date:"H:m-d.m.Y"|lower }}
+            </div>
         </div>
     </div>
-    <table class="table table-bordered table-dark">
-          <thead>
-              <tr>
-                  <th scope="col"> Nr </th>
-                  <th scope="col">Imię i Nazwisko</th>
-                  <th scope="col">Odebrane</th>
-                  <th scope="col">Ocena</th>
-                  <th scope="col">actions</th>
-                  <th scope="col">Ostatnie Logowanie</th>
-              </tr>
-          </thead>
-          <tbody>
-            {% for item in students %}
+    {% if context.teacher == request.user %}
+    <div class="myStydentsList">
+            <table class="table">
+            <thead class="thead-dark">
                 <tr>
-                    <th scope="row">{{forloop.counter}}</th>
-                    <td>{{item.student}}</td>
-                    <td>
-                        {% if item.status == 'ToAceptRecived' %}
-                            nie odebrane
-                        {% endif %}
-                        {% if item.status == 'ConfirmRecived' %}
-                            Odebranie
-                        {% endif %}
-                        {% if item.taskfile  %}
-                            <a href="{{item.taskfile.url }}">pobierz zadnie</a>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {{item.rote}}
-                    </td>
-                    <td>
-                       <a href="{% url 'main:setRote' item.id  %}"> wystaw / zmień  ocene</a>
-                    </td>
-                    <td>
-                        {{item.student.last_login}}
-                    </td>
+                    <th scope="col"> Nr </th>
+                    <th scope="col">Imię i Nazwisko</th>
+                    <th scope="col">Odebrane</th>
+                    <th scope="col">Ocena</th>
+                    <th scope="col">actions</th>
+                    <th scope="col">Ostatnie Logowanie</th>
                 </tr>
-            {% endfor %}
-          </tbody>
-    </table>
+            </thead>
+                <tbody>
+                    {% for item in students %}
+                    <tr>
+                        <th scope="row">{{forloop.counter}}</th>
+                        <td>{{item.student}}</td>
+                        <td>
+                            {% if item.status == 'ToAceptRecived' %}
+                                nie odebrane
+                            {% endif %}
+                            {% if item.status == 'ConfirmRecived' %}
+                                Odebranie
+                            {% endif %}
+                            {% if item.taskfile  %}
+                                <a href="{{item.taskfile.url }}" class="btn btn-primary">pobierz zadnie</a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {{item.rote}}
+                        </td>
+                        <td>
+                            <a href="{% url 'main:setRote'  item.id  %}" class="btn btn-primary">wystaw / zmień  ocene</a>
+                        </td>
+                        <td>
+                            {{ item.student.last_login|date:"H:m-d.m.Y"|lower }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
+    {% endif %}
 </div>
 
 {% endblock %}

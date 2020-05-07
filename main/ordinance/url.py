@@ -15,6 +15,6 @@ urlpatterns = [
     path('sentMess/<int:id>',sentMess.as_view(),name="sentMess"),
     path('ShowLesson/<int:id>',ShowLesson.as_view(),name="ShowLesson"),
     path('setRote/<int:id>',setRote.as_view(),name="setRote"),
-    path('sentSolution/<int:id>/<int:lessonId>',sentSolution.as_view(),name="sentSolution"),
+    path('sentSolution/<int:id>',sentSolution.as_view(),name="sentSolution"),
     path('ConfirmRecivedLesson/<int:id>',ConfirmRecivedLesson.as_view(),name="ConfirmRecivedLesson"),
 ]
