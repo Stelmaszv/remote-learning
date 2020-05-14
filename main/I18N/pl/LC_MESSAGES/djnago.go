@@ -1,0 +1,2 @@
+msgid "go"
+msgstr "fqfe"

@@ -1,11 +1,16 @@
 from core.baseview import baseListView
 from ordinance.models import Lesson,Dashbord
+from django.shortcuts import redirect
+from core.decorators import login_required
 class main(baseListView):
     template_name = 'mainpage/mian.html'
     def setContext(self, request):
         self.context ={
             'list':self.return_Objects(request)
         }
+    @login_required
+    def get(self, request, *args, **kwargs):
+        return self.addGet(request)
     def return_Objects(self,request):
         views={'educator' : educator,'student': studnet,'teacher':teacher,'manager' :manager}
         view=views[request.user.type.name]

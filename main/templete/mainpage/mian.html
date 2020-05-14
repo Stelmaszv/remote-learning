@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load i18n %}
+{% trans "go" %}
 <div class="container dashbord">
     {% for item in list %}
     <div class="offset-2 col-8 dashbordItem">
@@ -21,8 +23,9 @@
                      {% if item.lesson %}
                     <div class="btn-toolbar justify-content-center" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group mr-2" role="group" aria-label="First group">
-                    
+                        {% if item.lesson.taskfile %}
                         <a href="{{ item.lesson.taskfile.url }}" class="btn btn-primary">Pobierz zadnie</a>
+                            {% endif %}
                             {% for el in item.lesson.tasks.all %}
                                 {% if el.student.id == request.user.id %}
                                     {% if el.data_recived %}
