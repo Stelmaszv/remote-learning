@@ -16,31 +16,29 @@ class main(baseListView):
         view=views[request.user.type.name]
         return  view().show(request)
 class abstractMain():
+    list=[]
+    dasbord = Dashbord.objects.all()
     def show(self,request):
         pass
     def basic_Show(self,request):
-        list = []
-        dasbord = Dashbord.objects.all()
-        for item in dasbord:
+        for item in self.dasbord:
             if request.user.type.name==item.place.name \
                     or item.place.name=='all' \
                     or item.author==request.user:
-                list.append(item)
-        return list;
+                self.list.append(item)
+        return self.list;
 class educator(abstractMain):
     def show(self,request):
         return self.basic_Show(request)
 class studnet(abstractMain):
     def show(self,request):
-        list=[]
-        dasbord= Dashbord.objects.all()
-        for item in dasbord:
+        for item in self.dasbord:
             if request.user.type.name==item.place.name \
                     and self.if_in_class(request, item)\
                     and item.type.name=='lesson' \
                     or item.type.name=='normal':
-                list.append(item)
-        return  list
+                self.list.append(item)
+        return  self.list
     def if_in_class(self,request,object):
         if object.lesson:
             if object.lesson.classroom==request.user.is_student:
