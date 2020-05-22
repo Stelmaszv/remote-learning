@@ -14,9 +14,9 @@ class add_Student(baseCreate):
     form=educator
     getObject = Account
     @login_educator
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) ->baseCreate:
         return self.addGet(request)
-    def postSave(self, request, *args, **kwargs):
+    def postSave(self, request, *args, **kwargs)-> None:
         item = Account.objects.latest('id')
         item.username = self.form.cleaned_data['first_name'] + ' ' + self.form.cleaned_data['last_name']
         password = passwordGeneartor().setPassword()
@@ -31,9 +31,9 @@ class add_Personel(baseCreate):
     success_url = '/ordinance/myPersonel/'
     form=manager
     @login_manager
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) ->baseCreate:
         return self.addGet(request)
-    def postSave(self, request, *args, **kwargs):
+    def postSave(self, request, *args, **kwargs) -> None:
         item = Account.objects.latest('id')
         item.username = self.form.cleaned_data['first_name'] + ' ' + self.form.cleaned_data['last_name']
         password = passwordGeneartor().setPassword()
@@ -46,7 +46,7 @@ class addDashbord(baseCreate):
     template_name = 'ordinance/addLesson.html'
     success_url = '/'
     form = DashbordForm
-    def postSave(self, request, *args, **kwargs):
+    def postSave(self, request, *args, **kwargs) -> None:
         Type = DashbordType.objects.get(name='normal')
         self.item.author=request.user
         self.item.type=Type
@@ -55,14 +55,14 @@ class addLesson(baseCreate):
     template_name = 'ordinance/addLesson.html'
     success_url = '/'
     form=LessonForm
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseCreate:
         self.form.email=request.user.email
         return self.addGet(request)
-    def post(self,request, *args, **kwargs):
+    def post(self,request, *args, **kwargs)->baseCreate:
         self.form.email = request.user.email
         print(request)
         return self.addPost(request)
-    def postSave(self, request, *args, **kwargs):
+    def postSave(self, request, *args, **kwargs) -> None:
         classrom=Classroom.objects.get(name=self.item.classroom).students.all()
         for student in classrom:
             task = Tasks(student=student, data_recived=False,lessons=self.item,rote=0)
@@ -76,29 +76,29 @@ class addLesson(baseCreate):
 class myStudents(baseListView):
     template_name = 'ordinance/myStudents.html'
     @login_educator
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseListView:
         return self.addGet(request)
-    def setContext(self, request):
+    def setContext(self, request)->baseListView:
         self.context = {
             'items': Account.objects.filter(is_student__name=request.user.is_educator).order_by('-last_name')
         }
 class myLesson(baseListView):
     template_name = 'ordinance/myLessons.html'
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseListView:
         return self.addGet(request)
-    def setContext(self, request):
+    def setContext(self, request)->baseListView:
         self.context = {
             'items': Lesson.objects.filter(teacher=request.user).order_by('-data')
         }
 class myTask(baseListView):
     template_name = 'ordinance/myTasks.html'
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseListView:
         return self.addGet(request)
-    def setContext(self, request):
+    def setContext(self, request)->baseListView:
         self.context = {
             'items': self.set_Data(self.set_Objects(request),request)
         }
-    def set_Data(self,objects,request):
+    def set_Data(self,objects,request)->list:
         for item in objects:
             for task in item.tasks.all():
                 if task.student == request.user:
@@ -110,7 +110,7 @@ class myTask(baseListView):
                         item.stan = 'rote'
                         item.rote = task.rote
         return objects
-    def set_Objects(self,request):
+    def set_Objects(self,request)->list:
         lesson = Lesson.objects.all()
         lessonNewArray=[];
         for item in lesson:
@@ -122,7 +122,7 @@ class sentSolution(baseUpdateView):
     template_name = 'ordinance/sentSolution.html'
     getObject = Tasks
     form = TasksSolution
-    def setContext(self,request, *args, **kwarg):
+    def setContext(self,request, *args, **kwarg)->baseUpdateView:
         self.context={
             'item':Tasks.objects.get(id=self.kwargs.get("id")),
             'form':self.form
@@ -132,15 +132,15 @@ class setRote(baseUpdateView):
     template_name = 'ordinance/sentSolution.html'
     getObject = Tasks
     form = TasksSetRote
-    def postSave(self, request, *args, **kwargs):
+    def postSave(self, request, *args, **kwargs)-> None:
         self.item.rotedata=datetime.datetime.now()
         self.item.save()
 class myRotes(baseListView):
     getObject = Tasks
     template_name = 'ordinance/myrotes.html'
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseListView:
         return self.addGet(request)
-    def setContext(self,request):
+    def setContext(self,request)->baseListView:
         self.context={
             'items':self.get_object(request),
         }
@@ -150,12 +150,12 @@ class myRotes(baseListView):
 class ShowLesson(baseShowView):
     template_name='ordinance/showlesson.html'
     getObject=Lesson
-    def setContext(self,request):
+    def setContext(self,request)->baseShowView:
         self.context={
             'context':self.get_object(),
             'students':self.get_students()
         }
-    def get_students(self):
+    def get_students(self)->list:
         tasks=self.get_object().tasks.all()
         for task in tasks:
             task.status = 'ToAceptRecived'
@@ -169,7 +169,7 @@ class sentMess(baseUpdateView):
     template_name = 'ordinance/sentMess.html'
     getObject = Account
     form = AccountForm
-    def post(self,request, *args, **kwargs):
+    def post(self,request, *args, **kwargs)->baseUpdateView:
         self.setContext(request)
         self.form = self.setform(request)
         if self.form.is_valid():
@@ -183,7 +183,7 @@ class passwordReset(baseShowView):
     template_name = 'ordinance/showlesson.html'
     success_url = '/ordinance/myStudents/'
     getObject = Account
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseShowView:
         password = passwordGeneartor().setPassword()
         print(password)
         item = Account.objects.get(id=self.kwargs.get("id"))
@@ -195,7 +195,7 @@ class passwordReset(baseShowView):
 class ConfirmRecivedLesson(baseUpdateView):
     getObject = Tasks
     template_name = 'ordinance/showlesson.html'
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseUpdateView:
         id_ = self.kwargs.get("id")
         item=Tasks.objects.get(id=id_)
         item.data_recived=True
@@ -205,9 +205,9 @@ class ConfirmRecivedLesson(baseUpdateView):
 class myPersonel(baseListView):
     template_name = 'ordinance/myPersonel.html'
     @login_manager
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs)->baseListView:
         return self.addGet(request)
-    def setContext(self, request):
+    def setContext(self, request)->baseListView:
         self.context = {
             'items': Account.objects.filter(is_student__name=request.user.is_educator).order_by('-last_name')
         }

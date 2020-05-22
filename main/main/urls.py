@@ -21,7 +21,6 @@ from mainpage import url
 from ordinance import url
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/', include('authorization.urls')),
     path('ordinance/', include('ordinance.url')),
     path('', main.as_view(),name='main')
 ]
